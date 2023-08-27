@@ -1,15 +1,34 @@
 const portSelector = document.getElementById('portSelector');
-const baudRateSelector = document.getElementById('baudRateSelector');
+const baudRateInput = document.getElementById('baudRateInput'); // Changed from baudRateSelector
 const connectButton = document.getElementById('connectButton');
 const disconnectButton = document.getElementById('disconnectButton');
-const configFileInput = document.getElementById('configFile');
 const chartCanvas = document.getElementById('chartCanvas');
+const dataTable = document.getElementById('dataTable'); // Removed unnecessary {}
+
+const tableBody = dataTable.querySelector('tbody');
 const chart = new Chart(chartCanvas.getContext('2d'), {
   // ... (chart configuration as in the previous script.js)
 });
 
+// Function to update the chart and table with new data
+function updateChartAndTable(time, value) {
+  // Update the chart
+  chart.data.labels.push(time);
+  chart.data.datasets[0].data.push(value);
+  chart.update();
+
+  // Update the table
+  const newRow = tableBody.insertRow();
+  newRow.insertCell(0).textContent = time;
+  newRow.insertCell(1).textContent = value;
+}
+
+// Function to simulate receiving data from Arduino
+function receiveDataFromArduino(time, value) {
+  updateChartAndTable(time, value);
+}
+
 let selectedPort = null;
-let selectedBaudRate = 9600; // Default baud rate
 
 // Function to update the chart
 function updateChart(value) {
@@ -39,24 +58,6 @@ async function connectUSB() {
 function disconnectUSB() {
   // ... (disconnect/reset code here)
 }
-
-// Function to handle config file upload
-configFileInput.addEventListener('change', event => {
-  const file = event.target.files[0];
-  if (file) {
-    // Read and process the config file
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      const configData = JSON.parse(event.target.result);
-      // Process the config data as needed
-      // ... (config processing code here)
-    };
-    reader.readAsText(file);
-  }
-});
-
-// Populate USB port selector
-listUSBDevices();
 
 // Event listeners
 connectButton.addEventListener('click', connectUSB);
