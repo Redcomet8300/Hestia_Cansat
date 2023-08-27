@@ -15,8 +15,15 @@
       <div class="usb-section">
         <label for="portSelector">Select USB Port:</label>
         <select id="portSelector"></select>
+        
+        <label for="baudRateInput">Enter Baud Rate:</label>
+        <input type="number" id="baudRateInput" value="9600" min="1">
+        
         <button id="connectButton" class="cyan-button">Connect</button>
         <button id="disconnectButton" class="reset-button">Reset</button>
+      </div>
+      <div class="config-section">
+        <input type="file" id="configFile" accept=".json">
       </div>
       <div class="chart-section">
         <canvas id="chartCanvas"></canvas>
