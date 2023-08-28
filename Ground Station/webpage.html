@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arduino Data Plotting</title>
+  <title>Ground Station</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>Arduino Data Plotting</h1>
+      <h1>Ground Station</h1>
     </header>
     <div class="content">
       <div class="usb-section">
@@ -20,7 +20,7 @@
         <input type="number" id="baudRateInput" value="9600" min="1">
         
         <button id="connectButton" class="cyan-button">Connect</button>
-        <button id="disconnectButton" class="reset-button">Disconnect / Reset</button>
+        <button id="disconnectButton" class="reset-button">Reset</button>
       </div>
       <div class="chart-section">
         <canvas id="chartCanvas"></canvas>
@@ -34,7 +34,7 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Data rows will be added here dynamically -->
+            <!-- Display Graph -->
           </tbody>
         </table>
       </div>
@@ -45,3 +45,6 @@
   <script src="script.js"></script>
 </body>
 </html>
+
+<!-- To DO -->
+<!-- ตั้งปุ่ม สลับ กราฟ(เอาตัวเลขไว้ด้านล่าง)กับตัวเลขค่า -->

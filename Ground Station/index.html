@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Serial Data Display</title>
+</head>
+<body>
+    <h1>Serial Data Display</h1>
+    <pre id="data-display"></pre>
+
+    <script>
+        const dataDisplay = document.getElementById('data-display');
+
+        // Function to update the displayed data
+        function updateData(data) {
+            dataDisplay.innerText = dataDisplay.innerText + data + '\n';
+        }
+
+        // Open a WebSocket connection to the server
+        const socket = new WebSocket(`ws://${window.location.hostname}:8765/`);
+
+        socket.onmessage = function(event) {
+            updateData(event.data);
+        };
+    </script>
+</body>
+</html>
