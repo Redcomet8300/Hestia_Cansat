@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Serial Data Graph</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div style="display: flex;">
+    <div style="flex: 1;">
+      <label for="baudRate">Baud Rate:</label>
+      <input type="number" id="baudRate" value="9600">
+      <br>
+      <label for="serialPort">Serial Port:</label>
+      <select id="serialPort"></select>
+      <button onclick="connectSerial()">Connect</button>
+      <br><br>
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>Variable</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Table rows will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
+    <div style="flex: 2;">
+      <canvas id="combinedChart" width="400" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- Add a canvas for each individual graph -->
+  <canvas class="individualChart" width="400" height="200"></canvas>
+
+  <script>
+    const dataTable = document.getElementById('dataTable');
+    const combinedChart = new Chart(document.getElementById('combinedChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [],
+      },
+      options: {
+        scales: {
+          x: {
+            type: 'linear',
+            position: 'bottom',
+          },
+        },
+      },
+    });
+
+    // Create an array to store individual charts
+    const individualCharts = [];
+
+    async function listAvailablePorts() {
+      const portSelect = document.getElementById('serialPort');
+      const ports = await navigator.serial.getPorts();
+      portSelect.innerHTML = '';
+      ports.forEach(port => {
+        const option = document.createElement('option');
+        option.value = port.name;
+        option.textContent = port.name;
+        portSelect.appendChild(option);
+      });
+    }
+
+    async function connectSerial() {
+      try {
+        const baudRate = parseInt(document.getElementById('baudRate').value);
+        const portName = document.getElementById('serialPort').value;
+        const port = await navigator.serial.requestPort({ filters: [{ usbVendorId: 0x2341 }] }); // Adjust vendor ID
+        await port.open({ baudRate: baudRate });
+
+        const reader = port.readable.getReader();
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) {
+            reader.releaseLock();
+            break;
+          }
+          processData(value);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    function processData(data) {
+      const time = new Date().toLocaleTimeString();
+      const parsedData = JSON.parse(data); // Assuming data is in JSON format
+      updateTable(parsedData);
+      updateCharts(parsedData);
+    }
+
+    function updateTable(data) {
+      const newRow = dataTable.insertRow();
+      const variableCell = newRow.insertCell(0);
+      const valueCell = newRow.insertCell(1);
+      variableCell.innerHTML = data.variable;
+      valueCell.innerHTML = data.value;
+    }
+
+    function updateCharts(data) {
+      const time = new Date().getTime();
+
+      // Update the combined chart
+      if (!combinedChart.data.datasets.find(dataset => dataset.label === data.variable)) {
+        combinedChart.data.datasets.push({
+          label: data.variable,
+          data: [],
+          borderColor: getRandomColor(),
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          borderWidth: 1,
+          fill: false,
+        });
+      }
+
+      const combinedDataset = combinedChart.data.datasets.find(dataset => dataset.label === data.variable);
+      combinedDataset.data.push({ x: time, y: data.value });
+
+      // Update individual charts
+      let individualChart = individualCharts.find(chart => chart.variable === data.variable);
+      if (!individualChart) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 400;
+        canvas.height = 200;
+        document.body.appendChild(canvas);
+
+        individualChart = new Chart(canvas.getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: [],
+            datasets: [{
+              label: data.variable,
+              data: [],
+              borderColor: getRandomColor(),
+              backgroundColor: 'rgba(0, 0, 0, 0)',
+              borderWidth: 1,
+              fill: false,
+            }],
+          },
+          options: {
+            scales: {
+              x: {
+                type: 'linear',
+                position: 'bottom',
+              },
+            },
+          },
+        });
+
+        individualCharts.push({
+          variable: data.variable,
+          chart: individualChart,
+        });
+      }
+
+      const individualDataset = individualChart.data.datasets[0];
+      individualDataset.data.push({ x: time, y: data.value });
+
+      // Update all charts
+      combinedChart.update();
+      individualChart.update();
+
+      // Remove old data points to avoid cluttering the graph
+      const maxDataPoints = 10; // Adjust as needed
+      if (combinedDataset.data.length > maxDataPoints) {
+        combinedDataset.data.shift();
+      }
+      if (individualDataset.data.length > maxDataPoints) {
+        individualDataset.data.shift();
+      }
+    }
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    listAvailablePorts();
+  </script>
+</body>
+</html>
