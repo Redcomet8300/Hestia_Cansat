@@ -1,11 +1,17 @@
 #include <Adafruit_SSD1306.h>
+#include <Wire.h> // Include the Wire library for I2C communication
+
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+// Define your I2C address and reset pin (if used) here
+#define OLED_ADDRESS 0x3C  // Change this to your OLED display's I2C address
+#define OLED_RESET -1       // Change this to your OLED display's reset pin if used, or set to -1 if not used
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 void setup() {
-  display.begin(SSD1306_I2C_ADDRESS, OLED_RESET);
+  display.begin(OLED_ADDRESS, OLED_RESET);
   display.display();
   delay(2000);
   display.clearDisplay();
