@@ -27,7 +27,7 @@ def select_serial_port():
 
 # Main program
 selected_port = select_serial_port()
-ser = serial.Serial(selected_port, 9600)
+ser = serial.Serial(selected_port, 9600)  # Fixed the error here
 
 server_url = "http://localhost:3001"  # Change this to the actual server URL
 
