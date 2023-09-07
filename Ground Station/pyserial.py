@@ -1,58 +1,39 @@
+from flask import Flask, render_template, request, jsonify, Response
 import serial
-import http.server
-import socketserver
-import threading
-import websocket
 
-# Global variable to store received serial data
-received_data = ""
+app = Flask(__name__)
+ser = None
 
-# Serial port configuration
-serial_port = '/dev/ttyUSB0'
-baud_rate = 9600
-timeout = 1
+@app.route('/')
+def index():
+    return render_template('webpage.html')
 
-# Serial port thread function
-def serial_thread():
-    global received_data
-
-    ser = serial.Serial(serial_port, baud_rate, timeout=timeout)
-
+def data_gen():
     while True:
-        data = ser.readline().decode('utf-8').strip()
-        if data:
-            received_data = data
+        if ser:
+            yield 'data: {}\n\n'.format(ser.readline().decode('utf-8'))
 
-# HTTP server to serve the HTML page
-class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
-    def do_GET(self):
-        if self.path == '/':
-            self.path = 'index.html'
-        return http.server.SimpleHTTPRequestHandler.do_GET(self)
+@app.route('/data')
+def data():
+    return Response(data_gen(), content_type='text/event-stream')
 
-# WebSocket server thread function
-def websocket_thread():
-    server = websocket.WebSocketServer(
-        host='localhost',
-        port=8765,
-        loglevel=websocket.LOGLEVEL_INFO
-    )
-    
-    for client in server.serve_forever():
-        while True:
-            client.send(received_data)
+@app.route('/connect', methods=['POST'])
+def connect():
+    global ser
+    port = request.form.get('port', 'COM3')
+    baud_rate = request.form.get('baudRate', '9600')
 
-# Start the serial thread
-serial_thread = threading.Thread(target=serial_thread)
-serial_thread.daemon = True
-serial_thread.start()
+    if not ser:
+        ser = serial.Serial(port, int(baud_rate))
+    return 'Connected to {} at {} baud rate.'.format(port, baud_rate)
 
-# Start the WebSocket server thread
-websocket_thread = threading.Thread(target=websocket_thread)
-websocket_thread.daemon = True
-websocket_thread.start()
+@app.route('/disconnect', methods=['POST'])
+def disconnect():
+    global ser
+    if ser:
+        ser.close()
+        ser = None
+    return 'Disconnected from the Arduino.'
 
-# Start the HTTP server
-httpd = socketserver.TCPServer(('localhost', 8000), MyHTTPRequestHandler)
-print("Server running at http://localhost:8000/")
-httpd.serve_forever()
+if __name__ == '__main__':
+    app.run(debug=True)

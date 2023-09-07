@@ -1,50 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ground Station</title>
-  <link rel="stylesheet" href="styles.css">
+    <title>Ground Station</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Ground Station</h1>
-    </header>
-    <div class="content">
-      <div class="usb-section">
-        <label for="portSelector">Select USB Port:</label>
-        <select id="portSelector"></select>
-        
-        <label for="baudRateInput">Enter Baud Rate:</label>
-        <input type="number" id="baudRateInput" value="9600" min="1">
-        
-        <button id="connectButton" class="cyan-button">Connect</button>
-        <button id="disconnectButton" class="reset-button">Reset</button>
-      </div>
-      <div class="chart-section">
-        <canvas id="chartCanvas"></canvas>
-      </div>
-      <div class="table-section">
-        <table id="dataTable">
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Display Graph -->
-          </tbody>
-        </table>
-      </div>
+    <div class="container">
+        <h1>Arduino Data Plotter</h1>
+        <div>
+            <label for="portSelect">Select Port:</label>
+            <select id="portSelect">
+                <option value="COM3">COM3</option>
+                <!-- Add more port options as needed -->
+            </select>
+        </div>
+        <div>
+            <label for="baudRateSelect">Select Baud Rate:</label>
+            <select id="baudRateSelect">
+                <option value="9600">9600</option>
+                <option value="115200">115200</option>
+                <!-- Add more baud rate options as needed -->
+            </select>
+        </div>
+        <button id="connectButton">Connect</button>
+        <canvas id="myChart" width="400" height="200"></canvas>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="script.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
-
-<!-- To DO -->
-<!-- ตั้งปุ่ม สลับ กราฟ(เอาตัวเลขไว้ด้านล่าง)กับตัวเลขค่า -->
