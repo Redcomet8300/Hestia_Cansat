@@ -1,12 +1,15 @@
 from flask import Flask, render_template, request, jsonify, Response
 import serial
+import serial.tools.list_ports
 
 app = Flask(__name__)
 ser = None
 
 @app.route('/')
 def index():
-    return render_template('webpage.html')
+    # Detect available serial ports
+    available_ports = [port.device for port in serial.tools.list_ports.comports()]
+    return render_template('webpage.html', available_ports=available_ports)
 
 def data_gen():
     while True:
