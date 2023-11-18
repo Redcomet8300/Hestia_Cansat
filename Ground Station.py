@@ -13,7 +13,7 @@ app.layout = html.Div([
     dcc.Graph(id='xyz-graph', config={'displayModeBar': False}),
     dcc.Interval(
         id='graph-update',
-        interval=3000,
+        interval=1000,
         n_intervals=0
     ),
 ])
@@ -25,7 +25,7 @@ x_data = []
 y_data = []
 z_data = []
 
-ser = serial.Serial('COM4', 9600)
+ser = serial.Serial('COM3', 9600)
 
 def update_data():
     try:
@@ -73,23 +73,38 @@ def update_graph(n):
 
     temp_fig = go.Figure()
     temp_fig.add_trace(go.Scatter(x=time_data, y=temp_data, mode='lines+markers', name='Temperature'))
-    temp_fig.update_layout(title='Temperature',
-                           xaxis=dict(title='Time'),
-                           yaxis=dict(title='Value'))
+    temp_fig.update_layout(
+        title='Temperature',
+        xaxis=dict(title='Time', tickfont=dict(size=20)),
+        yaxis=dict(title='Value', tickfont=dict(size=20)),
+        title_font=dict(size=30),  # Increase font size for the title
+        xaxis_title_font=dict(size=30),  # Increase font size for the time axis title
+        yaxis_title_font=dict(size=30)  # Increase font size for the y-axis title
+    )
 
     pressure_fig = go.Figure()
     pressure_fig.add_trace(go.Scatter(x=time_data, y=pressure_data, mode='lines+markers', name='Pressure'))
-    pressure_fig.update_layout(title='Pressure',
-                               xaxis=dict(title='Time'),
-                               yaxis=dict(title='Value'))
+    pressure_fig.update_layout(
+        title='Pressure',
+        xaxis=dict(title='Time', tickfont=dict(size=20)),
+        yaxis=dict(title='Value', tickfont=dict(size=20)),
+        title_font=dict(size=30),  # Increase font size for the title
+        xaxis_title_font=dict(size=30),  # Increase font size for the time axis title
+        yaxis_title_font=dict(size=30)  # Increase font size for the y-axis title
+    )
 
     xyz_fig = go.Figure()
     xyz_fig.add_trace(go.Scatter(x=time_data, y=x_data, mode='lines+markers', name='X'))
     xyz_fig.add_trace(go.Scatter(x=time_data, y=y_data, mode='lines+markers', name='Y'))
     xyz_fig.add_trace(go.Scatter(x=time_data, y=z_data, mode='lines+markers', name='Z'))
-    xyz_fig.update_layout(title='XYZ Values',
-                          xaxis=dict(title='Time'),
-                          yaxis=dict(title='Value'))
+    xyz_fig.update_layout(
+        title='XYZ Values',
+        xaxis=dict(title='Time', tickfont=dict(size=20)),
+        yaxis=dict(title='Value', tickfont=dict(size=20)),
+        title_font=dict(size=30),  # Increase font size for the title
+        xaxis_title_font=dict(size=30),  # Increase font size for the time axis title
+        yaxis_title_font=dict(size=30)  # Increase font size for the y-axis title
+    )
 
     return temp_fig, pressure_fig, xyz_fig
 
