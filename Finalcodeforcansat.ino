@@ -15,6 +15,7 @@
 #define OLED_CS 8
 #define OLED_RESET 6
 #define NUM_READINGS 100
+const int DELAY_TIME_MS = 10;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 MS5611 ms5611(0x77);
@@ -38,12 +39,6 @@ void setup() {
   display.display();
   delay(2000);
   display.clearDisplay();
-
-  if (!ms5611.begin()) {
-    Serial.println("MS5611 not found, check wiring!");
-    while (1);
-  }
-
   Wire.begin();
   mpu.initialize();
 
@@ -52,6 +47,10 @@ void setup() {
     while (1);
   }
 
+  if (!ms5611.begin()) {
+    Serial.println("MS5611 not found, check wiring!");
+    while (1);
+  }
   mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
   x = map(ax, -17000, 17000, 0, 179);
   y = map(ay, -17000, 17000, 0, 179);
@@ -60,16 +59,19 @@ void setup() {
 
 void loop() {
   ms5611.read();
-  int16_t celsius = static_cast<int16_t>(ms5611.getTemperature());
+  // Variables initialization
+int16_t celsius = static_cast<int16_t>(ms5611.getTemperature());
+int32_t totalPressure = 0;
 
-  int32_t totalPressure = 0; // Use int32_t for more headroom
-  for (int i = 0; i < NUM_READINGS; i++) {
+// Read and accumulate pressure values
+for (int i = 0; i < NUM_READINGS; ++i) {
     ms5611.read();
     totalPressure += static_cast<int32_t>(ms5611.getPressure());
-    delay(10);
-  }
-  int32_t avePressure = totalPressure / NUM_READINGS; // Use int32_t
+    delay(DELAY_TIME_MS);
+}
 
+// Calculate average pressure
+int32_t avePressure = totalPressure / NUM_READINGS;
   mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
   x = map(ax, -17000, 17000, 0, 179);
   y = map(ay, -17000, 17000, 0, 179);
