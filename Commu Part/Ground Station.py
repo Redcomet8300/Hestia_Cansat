@@ -10,22 +10,20 @@ AC_logo = 'assets/AClogo.png'
 NSM_logo = 'assets/NSMlogo.png'
 Hestia_logo = 'asset/Hestialogo.png'
 SPAC_logo = 'asset/spacelogo.jpg'
+Combine_logo = 'assets/Cansat For server.png'
 
 app = dash.Dash(__name__)
 
 app.layout = html.Div([
     html.Div([
-        html.Img(src=AC_logo, style={'width': '10%', 'position': 'absolute', 'top': '10px', 'right': '10px'}),
-        html.Img(src=NSM_logo),
-        html.Img(src=Hestia_logo),
-        html.Img(src=SPAC_logo),
+        html.Img(src=Combine_logo, style= {'display':'inline-block'}), 
 ]),
     dcc.Graph(id='temp-graph', config={'displayModeBar': False}),
     dcc.Graph(id='pressure-graph', config={'displayModeBar': False}),
     dcc.Graph(id='xyz-graph', config={'displayModeBar': False}),
     dcc.Interval(
         id='graph-update',
-        interval=3000,
+        interval=2000,
         n_intervals=0
     ),
 ])
@@ -89,9 +87,10 @@ def update_graph(n):
         title='Temperature',
         xaxis=dict(title='Time', tickfont=dict(size=20)),
         yaxis=dict(title='Value', tickfont=dict(size=20)),
-        title_font=dict(size=30),  # Increase font size for the title
-        xaxis_title_font=dict(size=30),  # Increase font size for the time axis title
-        yaxis_title_font=dict(size=30)  # Increase font size for the y-axis title
+        title_font=dict(size=40),  
+        xaxis_title_font=dict(size=40),  
+        yaxis_title_font=dict(size=40), 
+        height=800, 
     )
 
     pressure_fig = go.Figure()
@@ -100,9 +99,10 @@ def update_graph(n):
         title='Pressure',
         xaxis=dict(title='Time', tickfont=dict(size=20)),
         yaxis=dict(title='Value', tickfont=dict(size=20)),
-        title_font=dict(size=30),  # Increase font size for the title
-        xaxis_title_font=dict(size=30),  # Increase font size for the time axis title
-        yaxis_title_font=dict(size=30)  # Increase font size for the y-axis title
+        title_font=dict(size=40),  
+        xaxis_title_font=dict(size=40),  
+        yaxis_title_font=dict(size=40), 
+        height=800,
     )
 
     xyz_fig = go.Figure()
@@ -113,14 +113,13 @@ def update_graph(n):
         title='XYZ Values',
         xaxis=dict(title='Time', tickfont=dict(size=20)),
         yaxis=dict(title='Value', tickfont=dict(size=20)),
-        title_font=dict(size=30),  # Increase font size for the title
-        xaxis_title_font=dict(size=30),  # Increase font size for the time axis title
-        yaxis_title_font=dict(size=30)  # Increase font size for the y-axis title
+        title_font=dict(size=40),  
+        xaxis_title_font=dict(size=40),  
+        yaxis_title_font=dict(size=40), 
+        height=800, 
     )
 
     return temp_fig, pressure_fig, xyz_fig
-
-
 
 if __name__ == '__main__':
     app.run_server(debug=False)
