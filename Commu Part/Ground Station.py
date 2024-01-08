@@ -16,8 +16,12 @@ app = dash.Dash(__name__)
 
 app.layout = html.Div([
     html.Div([
-        html.Img(src=Combine_logo, style={'marginRight': '10px'}),
-]),
+        html.H1("Hestia Cansat" , style={'display':'inline-block'} ),
+    ], style={'marginLeft': '20px', 'marginTop': '20px'}),
+    html.Div([
+        html.Img(src=Combine_logo, style={'display':'inline-block'}),  # Adjust width and height as needed
+    ], style={'marginRight': '20px', 'marginTop': '20px', 'textAlign': 'right'}),
+
     dcc.Graph(id='temp-graph', config={'displayModeBar': False}),
     dcc.Graph(id='pressure-graph', config={'displayModeBar': False}),
     dcc.Graph(id='xyz-graph', config={'displayModeBar': False}),
@@ -35,7 +39,7 @@ x_data = []
 y_data = []
 z_data = []
 
-ser = serial.Serial('COM3', 9600)
+ser = serial.Serial('COM3', 9600) # Setting port
 
 def update_data():
     try:
