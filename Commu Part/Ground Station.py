@@ -16,7 +16,7 @@ app = dash.Dash(__name__)
 
 app.layout = html.Div([
     html.Div([
-        html.H1("Hestia Cansat" , style={'display':'inline-block'} ),
+        html.H1("Hestia Cansat", style={'display': 'inline-block', 'font-size': '0px'}),
     ], style={'marginLeft': '20px', 'marginTop': '20px'}),
     html.Div([
         html.Img(src=Combine_logo, style={'display':'inline-block'}),  # Adjust width and height as needed
@@ -39,7 +39,7 @@ x_data = []
 y_data = []
 z_data = []
 
-ser = serial.Serial('COM3', 9600) # Setting port
+ser = serial.Serial('COM4', 9600) # Setting port
 
 def update_data():
     try:
@@ -89,8 +89,8 @@ def update_graph(n):
     temp_fig.add_trace(go.Scatter(x=time_data, y=temp_data, mode='lines+markers', name='Temperature'))
     temp_fig.update_layout(
         title='Temperature',
-        xaxis=dict(title='Time', tickfont=dict(size=20)),
-        yaxis=dict(title='Value', tickfont=dict(size=20)),
+        xaxis=dict(title='Time', tickfont=dict(size=40)),
+        yaxis=dict(title='Value', tickfont=dict(size=40)),
         title_font=dict(size=40),  
         xaxis_title_font=dict(size=40),  
         yaxis_title_font=dict(size=40), 
@@ -101,8 +101,8 @@ def update_graph(n):
     pressure_fig.add_trace(go.Scatter(x=time_data, y=pressure_data, mode='lines+markers', name='Pressure'))
     pressure_fig.update_layout(
         title='Pressure',
-        xaxis=dict(title='Time', tickfont=dict(size=20)),
-        yaxis=dict(title='Value', tickfont=dict(size=20)),
+        xaxis=dict(title='Time', tickfont=dict(size=40)),
+        yaxis=dict(title='Value', tickfont=dict(size=40)),
         title_font=dict(size=40),  
         xaxis_title_font=dict(size=40),  
         yaxis_title_font=dict(size=40), 
@@ -110,13 +110,14 @@ def update_graph(n):
     )
 
     xyz_fig = go.Figure()
-    xyz_fig.add_trace(go.Scatter(x=time_data, y=x_data, mode='lines+markers', name='X'))
-    xyz_fig.add_trace(go.Scatter(x=time_data, y=y_data, mode='lines+markers', name='Y'))
-    xyz_fig.add_trace(go.Scatter(x=time_data, y=z_data, mode='lines+markers', name='Z'))
+    xyz_fig.add_trace(go.Scatter(x=time_data, y=x_data, mode='lines+markers', name='X',))
+    xyz_fig.add_trace(go.Scatter(x=time_data, y=y_data, mode='lines+markers', name='Y',))
+    xyz_fig.add_trace(go.Scatter(x=time_data, y=z_data, mode='lines+markers', name='Z',))
+
     xyz_fig.update_layout(
         title='XYZ Values',
-        xaxis=dict(title='Time', tickfont=dict(size=20)),
-        yaxis=dict(title='Value', tickfont=dict(size=20)),
+        xaxis=dict(title='Time', tickfont=dict(size=40)),
+        yaxis=dict(title='Value', tickfont=dict(size=40)),
         title_font=dict(size=40),  
         xaxis_title_font=dict(size=40),  
         yaxis_title_font=dict(size=40), 
