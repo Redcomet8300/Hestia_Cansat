@@ -39,7 +39,7 @@ x_data = []
 y_data = []
 z_data = []
 
-ser = serial.Serial('COM4', 9600) # Setting port
+ser = serial.Serial('COM3', 9600) # Setting port
 
 def update_data():
     try:
@@ -63,7 +63,7 @@ def update_data():
             y_data.append(new_y)
             z_data.append(new_z)
 
-            if len(time_data) > 10:
+            while len(time_data) > 100000000:
                 time_data.pop(0)
                 temp_data.pop(0)
                 pressure_data.pop(0)
@@ -119,7 +119,7 @@ def update_graph(n):
         xaxis=dict(title='Time', tickfont=dict(size=40)),
         yaxis=dict(title='Value', tickfont=dict(size=40)),
         title_font=dict(size=40),  
-        xaxis_title_font=dict(size=40),  
+        xaxis_title_font=dict(size=40),
         yaxis_title_font=dict(size=40), 
         height=800, 
     )
