@@ -19,7 +19,7 @@ app.layout = html.Div([
         html.H1("Hestia Cansat", style={'display': 'inline-block', 'font-size': '0px'}),
     ], style={'marginLeft': '20px', 'marginTop': '20px'}),
     html.Div([
-        html.Img(src=Combine_logo, style={'display':'inline-block'}),  # Adjust width and height as needed
+        html.Img(src=Combine_logo, style={'display':'inline-block'}), 
     ], style={'marginRight': '20px', 'marginTop': '20px', 'textAlign': 'right'}),
 
     dcc.Graph(id='temp-graph', config={'displayModeBar': False}),
@@ -39,7 +39,7 @@ x_data = []
 y_data = []
 z_data = []
 
-ser = serial.Serial('COM3', 9600) # Setting port
+ser = serial.Serial('COM3', 9600) # Setting port and baud rate
 
 def update_data():
     try:
