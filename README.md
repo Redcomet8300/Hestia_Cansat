@@ -4,6 +4,6 @@
 ## How to use :
 PDF Here
 ## Collaboators
-1. Thanakorn Sirimaneekul [Communicaton/Receiver](https://github.com/Redcomet8300/Hestia_Cansat/tree/main/Commu%20Part)
-2. Pisit Abhinorasaeth [Sensors/Transmitter]()
-3. Padol Nakawanichwechasit [Sensors/Guidebook]()
+1. Thanakorn Sirimaneekul
+2. Pisit Abhinorasaeth 
+3. Padol Nakawanichwechasit
